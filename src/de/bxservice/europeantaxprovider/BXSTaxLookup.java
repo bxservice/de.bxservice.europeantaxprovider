@@ -36,12 +36,15 @@ public class BXSTaxLookup extends DefaultTaxLookup {
 
 	@Override
 	public int get(Properties ctx, int C_TaxCategory_ID, boolean IsSOTrx, Timestamp shipDate, int shipFromC_Location_ID,
-			int shipToC_Location_ID, Timestamp billDate, int billFromC_Location_ID, int billToC_Location_ID,
+			int shipToC_Location_ID, int dropshipToC_Location_ID, Timestamp billDate, int billFromC_Location_ID, int billToC_Location_ID,
 			String trxName) {
-		if (IsSOTrx)
+		if (IsSOTrx) {
 			billToC_Location_ID = shipToC_Location_ID; 
-		else 
+		} else {
+			if (dropshipToC_Location_ID > 0 && dropshipToC_Location_ID != shipToC_Location_ID)
+				billToC_Location_ID = dropshipToC_Location_ID;
 			billFromC_Location_ID = shipFromC_Location_ID;
+		}
 
 		return super.get(ctx, C_TaxCategory_ID, IsSOTrx, shipDate, shipFromC_Location_ID, shipToC_Location_ID, billDate, billFromC_Location_ID, billToC_Location_ID, trxName);
 	}
